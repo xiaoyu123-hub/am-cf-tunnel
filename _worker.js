@@ -14,14 +14,10 @@ let s5 = '';
 let s5Enable = false;
 let parsedS5 = {};
 let durl = atob('aHR0cHM6Ly9za3kucmV0aGlua2Rucy5jb20vMTotUGZfX19fXzlfOEFfQU1BSWdFOGtNQUJWRERtS09IVEFLZz0=');
-let fname = atob('5pWw5a2X5aWX5Yip');
+let fname = atob('eXVlZ2U=');
 const dataTypeTr = 'EBMbCxUX';
 let enableLog = false;
-let ytName = atob('aHR0cHM6Ly95b3V0dWJlLmNvbS9AYW1fY2x1YnM/c3ViX2NvbmZpcm1hdGlvbj0x');
-let tgName = atob('aHR0cHM6Ly90Lm1lL2FtX2NsdWJz');
-let ghName = atob('aHR0cHM6Ly9naXRodWIuY29tL2FtY2x1YnMvYW0tY2YtdHVubmVs');
-let bName = atob('aHR0cHM6Ly9hbWNsdWJzcy5jb20=');
-let pName = '5pWw5a2X5aWX5Yip';
+let pName = 'eXVlZ2U=';
 import { connect } from 'cloudflare:sockets';
 if (!isValidUserId(id)) {
     throw new Error('id is invalid');
@@ -48,7 +44,6 @@ export default {
             }
             pDomain = kvData.kv_pDomain || pDomain;
             log(`[fetch]--> pDomain = ${JSON.stringify(pDomain)}`);
-
             p64 = url.searchParams.get('P64') || P64 || p64;
             p64Prefix = url.searchParams.get('P64PREFIX') || P64PREFIX || p64Prefix;
             p64Domain = kvData.kv_p64Domain || p64Domain;
@@ -876,13 +871,13 @@ function stringToArray(str) {
 /** ---------------------cf data------------------------------ */
 const MY_KV_ALL_KEY = 'KV_CONFIG';
 async function check_kv(env) {
-    if (!env || !env.amclubs) {
-        return new Response('Error: amclubs KV_NAMESPACE is not bound.', {
+    if (!env || !env.kv) {
+        return new Response('Error: kv KV_NAMESPACE is not bound.', {
             status: 400,
         });
     }
-    if (typeof env.amclubs === 'undefined') {
-        return new Response('Error: amclubs KV_NAMESPACE is not bound.', {
+    if (typeof env.kv === 'undefined') {
+        return new Response('Error: kv KV_NAMESPACE is not bound.', {
             status: 400,
         })
     }
@@ -891,7 +886,7 @@ async function check_kv(env) {
 
 async function get_kv(env) {
     try {
-        const config = await env.amclubs.get(MY_KV_ALL_KEY, { type: 'json' });
+        const config = await env.kv.get(MY_KV_ALL_KEY, { type: 'json' });
         if (!config) {
             return {
                 kv_id: '',
@@ -922,7 +917,7 @@ async function set_kv_data(request, env) {
             kv_pDomain: stringToArray(kv_pDomain),
             kv_p64Domain: stringToArray(kv_p64Domain)
         };
-        await env.amclubs.put(MY_KV_ALL_KEY, JSON.stringify(data));
+        await env.kv.put(MY_KV_ALL_KEY, JSON.stringify(data));
         return new Response('保存成功', { status: 200 });
     } catch (err) {
         return new Response('保存失败: ' + err.message, { status: 500 });
@@ -1756,15 +1751,6 @@ function renderPage({ base64Title, suffix = '', heading, bodyContent }) {
         <h1>${heading}</h1>
         ${bodyContent}
         <div class="links">
-            <div class="link-row">
-                <a href="${ytName}" target="_blank">🎬 YouTube</a>
-                <a href="${tgName}" target="_blank">💬 Telegram</a>
-            </div>
-            <div class="link-row">
-                <a href="${ghName}" target="_blank">📂 GitHub</a>
-                <a href="${bName}" target="_blank">🌐 Blog</a>
-            </div>
-        </div>
         </div>
         </body>
     </html>`;
