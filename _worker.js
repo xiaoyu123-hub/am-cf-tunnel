@@ -1,12 +1,4 @@
-/**
- * YouTube  : https://youtube.com/@am_clubs
- * Telegram : https://t.me/am_clubs
- * GitHub   : https://github.com/amclubs
- * BLog     : https://amclubss.com
- */
-
 let id = atob('ZWM4NzJkOGYtNzJiMC00YTA0LWI2MTItMDMyN2Q4NWUxOGVk');
-
 let pnum = atob('NDQz');
 let paddrs = [
     atob('cHJveHlpcC5hbWNsdWJzLmNhbWR2ci5vcmc='),
@@ -14,50 +6,40 @@ let paddrs = [
 ];
 let paddr = paddrs[Math.floor(Math.random() * paddrs.length)];
 let pDomain = [];
-
 let p64 = true;
 let p64DnUrl = atob('aHR0cHM6Ly8xLjEuMS4xL2Rucy1xdWVyeQ==');
 let p64Prefix = atob('MjYwMjpmYzU5OmIwOjY0Ojo=');
 let p64Domain = [];
-
 let s5 = '';
 let s5Enable = false;
 let parsedS5 = {};
-
 let durl = atob('aHR0cHM6Ly9za3kucmV0aGlua2Rucy5jb20vMTotUGZfX19fXzlfOEFfQU1BSWdFOGtNQUJWRERtS09IVEFLZz0=');
 let fname = atob('5pWw5a2X5aWX5Yip');
 const dataTypeTr = 'EBMbCxUX';
 let enableLog = false;
-
 let ytName = atob('aHR0cHM6Ly95b3V0dWJlLmNvbS9AYW1fY2x1YnM/c3ViX2NvbmZpcm1hdGlvbj0x');
 let tgName = atob('aHR0cHM6Ly90Lm1lL2FtX2NsdWJz');
 let ghName = atob('aHR0cHM6Ly9naXRodWIuY29tL2FtY2x1YnMvYW0tY2YtdHVubmVs');
 let bName = atob('aHR0cHM6Ly9hbWNsdWJzcy5jb20=');
 let pName = '5pWw5a2X5aWX5Yip';
-
 import { connect } from 'cloudflare:sockets';
-
 if (!isValidUserId(id)) {
     throw new Error('id is invalid');
 }
-
 export default {
     async fetch(request, env, ctx) {
         try {
             let { ID, PADDR, P64, P64PREFIX, S5, D_URL, ENABLE_LOG } = env;
-
             const kvCheckResponse = await check_kv(env);
             let kvData = {};
             if (!kvCheckResponse) {
                 kvData = await get_kv(env) || {};
                 log(`[fetch]--> kv_id = ${kvData.kv_id}, kv_pDomain = ${JSON.stringify(kvData.pDomain)}, kv_p64Domain = ${JSON.stringify(kvData.kv_p64Domain)}`);
             }
-
             const url = new URL(request.url);
             enableLog = url.searchParams.get('ENABLE_LOG') || ENABLE_LOG || enableLog;
             id = (kvData.kv_id || ID || id).toLowerCase();
             log(`[fetch]--> id = ${id}`);
-
             paddr = url.searchParams.get('PADDR') || PADDR || paddr;
             if (paddr) {
                 const [ip, port] = paddr.split(':');
@@ -71,19 +53,16 @@ export default {
             p64Prefix = url.searchParams.get('P64PREFIX') || P64PREFIX || p64Prefix;
             p64Domain = kvData.kv_p64Domain || p64Domain;
             log(`[fetch]--> p64Domain = ${JSON.stringify(p64Domain)}`);
-
             s5 = url.searchParams.get('S5') || S5 || s5;
             parsedS5 = await requestParserFromUrl(s5, url);
             if (parsedS5) {
                 s5Enable = true;
             }
-
             durl = url.searchParams.get('D_URL') || D_URL || durl;
             let prType = url.searchParams.get(atob('UFJPVF9UWVBF'));
             if (prType) {
                 prType = prType.toLowerCase();
             }
-
             if (request.headers.get('Upgrade') === 'websocket') {
                 if (prType === xorDe(dataTypeTr, 'datatype')) {
                     return await websvcExecutorTr(request);
@@ -110,8 +89,6 @@ export default {
         }
     },
 };
-
-
 /** ---------------------tools------------------------------ */
 function log(...args) {
     if (enableLog) console.log(...args);
@@ -896,8 +873,6 @@ function stringToArray(str) {
         }
     }
 })();
-
-
 /** ---------------------cf data------------------------------ */
 const MY_KV_ALL_KEY = 'KV_CONFIG';
 async function check_kv(env) {
@@ -1012,8 +987,6 @@ async function show_kv_page(env) {
         { headers: { "Content-Type": "text/html; charset=UTF-8" }, status: 200 }
     );
 }
-
-
 /** -------------------websvc logic-------------------------------- */
 const WS_READY_STATE_OPEN = 1;
 const WS_READY_STATE_CLOSING = 2;
@@ -1652,8 +1625,6 @@ function closeDataStream(socket) {
         console.error('closeDataStream error', error);
     }
 }
-
-
 /** -------------------home page-------------------------------- */
 async function login(request, env) {
     const headers = {
